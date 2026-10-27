@@ -14,6 +14,12 @@ namespace Scp066
         [Description("Szansa na spawn SCP-066 na początku rundy (0-100%).")]
         public int SpawnChance { get; set; } = 35;
 
+        [Description("Maksymalna ilość HP dla SCP-066.")]
+        public int MaxHealth { get; set; } = 2000;
+
+        [Description("Maksymalna ilość Hume Shield (AHA) dla SCP-066.")]
+        public float HumeShield { get; set; } = 500f;
+
         [Description("Nazwa schematu MapEditorReborn / ProjectMER.")]
         public string SchematicName { get; set; } = "scp066";
 
