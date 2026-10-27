@@ -6,31 +6,33 @@
 
 # Polski
 
-![Version](https://img.shields.io/badge/wersja-1.0.0-blue)
+![Version](https://img.shields.io/badge/wersja-2.0.0-blue)
 ![EXILED](https://img.shields.io/badge/EXILED-compatible-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-Naprawiona i przepisana wersja pluginu [SCP-066 autorstwa RisottoMan](https://github.com/RisottoMan/SCP-066), dostosowana do najnowszego silnika EXILED i ProjectMER.
+Całkowicie przebudowana i naprawiona wersja pluginu [SCP-066 autorstwa RisottoMan](https://github.com/RisottoMan/SCP-066), dostosowana do najnowszego silnika EXILED (9.0+) i ProjectMER.
 
-> 💙 **Szczególne podziękowania dla [RisottoMan](https://github.com/RisottoMan)** za oryginalny plugin oraz **PaRRot** za model, all credits on them!
+> 💙 **Szczególne podziękowania dla:**
+> * **[RisottoMan](https://github.com/RisottoMan)** – za oryginalny plugin,
+> * **PaRRot & Parrot Industry** – za model i podstawę projektu, na której bazuje ta wersja,
 
 ---
 
-## ✨ Co zostało zmienione względem oryginału
-- Przepisany spawn — zamiast per-gracz, jedna kość na całą rundę (15% szansy)
-- Naprawiona kompatybilność z najnowszym EXILED i ProjectMER
-- Naprawiony system audio oparty na SCPSLAudioApi
-- Dodana ochrona przed konfliktem z innymi CustomRole (np. SCP-153)
-- Poprawiony teleport spawnu do HCZ Armory
-- Zmniejszone HP do 2000
+## ✨ Co zostało zmienione w wersji 2.0.0 (Full Rebuild)
+- **Natywne Menu Keybindów (SS2):** Usunięto przestarzałe komendy czatowe. Umiejętności binduje się teraz bezpośrednio w menu gry (Ustawienia Serwera), co omija błędy z `ClientSettings` w EXILED.
+- **Fail-safe Audio:** Brak plików na serwerze nie blokuje już zadawania obrażeń atakiem Beethovena.
+- **Blokada zwykłego ataku:** Zablokowano możliwość zadawania obrażeń "z łapy" (LPM).
+- **Optymalizacja Hintów:** Teksty odświeżają się co 1 sekundę, eliminując obciążenie serwera.
+- Zmiana struktury projektu na `.csproj` SDK-style (kompatybilność z .NET 4.8.1).
+- Zmiana API audio na nowsze `AudioPlayerApi`.
 
 ---
 
 ## Wymagania
-- [EXILED](https://github.com/ExMod-Team/EXILED) (najnowsza wersja)
+- [EXILED](https://github.com/ExMod-Team/EXILED) (najnowsza wersja 9.0+)
 - [Exiled.CustomRoles](https://github.com/ExMod-Team/EXILED) (dołączone do EXILED)
-- [MapEditorReborn / ProjectMER](https://github.com/Michal78900/MapEditorReborn)
-- [SCPSLAudioApi](https://github.com/DayLightDevelopment/SCPSLAudioApi)
+- [ProjectMER](https://github.com/Michal78900/MapEditorReborn)
+- [AudioPlayerApi](https://github.com/ExMod-Team/AudioPlayerApi) (zamiast starego SCPSLAudioApi)
 
 ---
 
@@ -38,70 +40,39 @@ Naprawiona i przepisana wersja pluginu [SCP-066 autorstwa RisottoMan](https://gi
 
 ### 1. Plugin
 Wrzuć skompilowany plik `Scp066.dll` do folderu:
-```
-EXILED/Plugins/
-```
+
+    EXILED/Plugins/
 
 ### 2. Schematic (model)
 Wrzuć folder ze schematem `Scp066` do folderu MapEditorReborn:
-```
-EXILED/Configs/MapEditorReborn/Schematics/Scp066/
-```
+
+    EXILED/Configs/ProjectMER/Schematics/Scp066/
 
 ### 3. Audio
 Wrzuć pliki dźwiękowe do folderu:
-```
-EXILED/Configs/Plugins/scp066/Audio/
-```
+
+    EXILED/Configs/Plugins/scp066/Audio/
 
 Wymagane pliki (format `.ogg`, **mono**, **48kHz**):
-```
-Beethoven.ogg   — główny atak symfoniczny
-Eric1.ogg
-Eric2.ogg
-Eric3.ogg       — dźwięki Erica (losowane)
-Notes1.ogg
-Notes2.ogg
-Notes3.ogg
-Notes4.ogg
-Notes5.ogg
-Notes6.ogg      — dźwięki muzyczne (losowane)
-```
 
----
-
-## Struktura folderów (końcowy wynik)
-```
-EXILED/
-├── Plugins/
-│   └── Scp066.dll
-├── Configs/
-│   ├── Plugins/
-│   │   └── scp066/
-│   │       └── Audio/
-│   │           ├── Beethoven.ogg
-│   │           ├── Eric1.ogg
-│   │           ├── Eric2.ogg
-│   │           ├── Eric3.ogg
-│   │           ├── Notes1.ogg
-│   │           ├── Notes2.ogg
-│   │           ├── Notes3.ogg
-│   │           ├── Notes4.ogg
-│   │           ├── Notes5.ogg
-│   │           └── Notes6.ogg
-│   └── MapEditorReborn/
-│       └── Schematics/
-│           └── Scp066/
-│               └── Scp066.json (+ assety)
-```
+    Beethoven.ogg   — główny atak symfoniczny
+    Eric1.ogg
+    Eric2.ogg
+    Eric3.ogg       — dźwięki Erica (losowane)
+    Notes1.ogg
+    Notes2.ogg
+    Notes3.ogg
+    Notes4.ogg
+    Notes5.ogg
+    Notes6.ogg      — dźwięki muzyczne (losowane)
 
 ---
 
 ## Konfiguracja
 Po pierwszym uruchomieniu serwera config pojawi się automatycznie w:
-```
-EXILED/Configs/config_gameplay.yml
-```
+
+    EXILED/Configs/config_gameplay.yml
+
 
 | Opcja | Domyślnie | Opis |
 |---|---|---|
@@ -120,24 +91,26 @@ EXILED/Configs/config_gameplay.yml
 ---
 
 ## Jak działa
-- Na starcie każdej rundy plugin rzuca kością — **10% szansy** że SCP-066 w ogóle się pojawi
-- Wybiera **losowego SCPa** z puli (pomija SCP-079 i graczy którzy już mają inną CustomRole)
-- Wybrany gracz spawnuje się w **HCZ Armory**
-- SCP-066 ma **2000 HP**, **500 HumeShield** i zmniejszoną skalę postaci
-- Porusza się wolniej niż normalny SCP
+- Na starcie każdej rundy plugin rzuca kością — **10% szansy**, że SCP-066 w ogóle się pojawi.
+- Wybiera **losowego SCPa** z puli (pomija SCP-079 i graczy, którzy już mają inną CustomRole).
+- Wybrany gracz spawnuje się w **HCZ Armory**.
+- SCP-066 ma **2000 HP**, **500 HumeShield** i zmniejszoną skalę postaci.
+- SCP-066 nie zadaje obrażeń zwykłym atakiem (LPM) – używa do tego wyłącznie Beethovena.
 
-### Umiejętności (bindy gracza)
-| Komenda | Skrót | Opis |
-|---|---|---|
-| `.scp066 eric` | `.scp066 e` | Odtwarza losowy dźwięk Erica |
-| `.scp066 music` | `.scp066 m` | Odtwarza losową melodię |
-| `.scp066 boom` | `.scp066 b` | Aktywuje atak Beethovena |
+### Umiejętności (Natywne menu w grze)
+Zrezygnowano z wpisywania komend na czacie. Plugin używa teraz menu ustawień gry:
+1. Podczas gry wciśnij klawisz `ESC` i wybierz **Ustawienia specyficzne dla serwera (Server-specific)**.
+2. W sekcji **SCP-066** przypisz dowolne klawisze do poniższych akcji:
+   - **Atak: Beethoven** (Aktywuje atak obszarowy)
+   - **Dźwięk: Eric** (Odtwarza losowy dźwięk Erica)
+   - **Dźwięk: Notes** (Odtwarza losową melodię)
 
 ### Atak Beethovena
-- Odtwarza `Beethoven.ogg` słyszalny w zasięgu ataku
-- Przez **24 sekundy** zadaje **5 obrażeń/s** wszystkim graczom w zasięgu
-- Trafieni gracze dostają efekt **Concussed** na 2 sekundy
-- Cooldown: **45 sekund**
+- Odtwarza `Beethoven.ogg` słyszalny w zasięgu ataku.
+- Przez **24 sekundy** zadaje **5 obrażeń/s** wszystkim graczom w zasięgu.
+- Trafieni gracze dostają efekt **Concussed** na 2 sekundy.
+- Działa prawidłowo nawet w przypadku braku plików audio na serwerze!
+- Cooldown: **45 sekund**.
 
 ---
 
@@ -151,42 +124,44 @@ EXILED/Configs/config_gameplay.yml
 
 ---
 
-## Autor
-**Matysiak** — wersja 1.0.0 Repaired
+## Twórcy
+**Matysiak** — wersja 2.0.0 (Full Rebuild & SS2 Menu Update)
 
 Oparty na oryginalnym pluginie **[SCP-066 by RisottoMan](https://github.com/RisottoMan/SCP-066)**
-Podziękowania: **RisottoMan**, **PaRRot**
+Ogromne podziękowania dla: **RisottoMan**, **PaRRot & Parrot Industry**, **TayTay**.
 
 ---
 ---
 
 # English
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![EXILED](https://img.shields.io/badge/EXILED-compatible-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A repaired and rewritten version of the [SCP-066 plugin by RisottoMan](https://github.com/RisottoMan/SCP-066), updated for the latest EXILED and ProjectMER engine.
+A completely rebuilt and repaired version of the [SCP-066 plugin by RisottoMan](https://github.com/RisottoMan/SCP-066), updated for the latest EXILED (9.0+) and ProjectMER engine.
 
-> 💙 **Special thanks to [RisottoMan](https://github.com/RisottoMan)** for the original plugin and **PaRRot** for model, all credits on them!
+> 💙 **Special thanks to:**
+> * **[RisottoMan](https://github.com/RisottoMan)** – for the original plugin,
+> * **PaRRot & Parrot Industry** – for the model and the project foundation this version is based on,
 
 ---
 
-## ✨ What changed from the original
-- Rewritten spawn logic — instead of per-player rolls, one dice roll per round (15% chance)
-- Fixed compatibility with latest EXILED and ProjectMER
-- Fixed audio system based on SCPSLAudioApi
-- Added protection against conflicts with other CustomRoles (e.g. SCP-153)
-- Fixed spawn teleport to HCZ Armory
-- Reduced HP to 2000
+## ✨ What changed in version 2.0.0 (Full Rebuild)
+- **Native Keybind Menu (SS2):** Removed obsolete chat commands. Abilities are now bound directly in the game's Server-Specific Settings menu, completely bypassing EXILED's faulty `ClientSettings`.
+- **Audio Fail-safe:** Missing audio files on the server no longer prevent the Beethoven attack from dealing damage.
+- **Basic Attack Blocked:** Prevented the ability to deal standard melee damage (LMB).
+- **Hint Optimization:** Hints now refresh exactly once per second, eliminating server strain.
+- Project structure rebuilt to SDK-style `.csproj` (maintaining `.NET 4.8.1` compatibility).
+- Audio API switched to the newer `AudioPlayerApi`.
 
 ---
 
 ## Requirements
-- [EXILED](https://github.com/ExMod-Team/EXILED) (latest version)
+- [EXILED](https://github.com/ExMod-Team/EXILED) (latest version 9.0+)
 - [Exiled.CustomRoles](https://github.com/ExMod-Team/EXILED) (included with EXILED)
-- [MapEditorReborn / ProjectMER](https://github.com/Michal78900/MapEditorReborn)
-- [SCPSLAudioApi](https://github.com/DayLightDevelopment/SCPSLAudioApi)
+- [ProjectMER](https://github.com/Michal78900/MapEditorReborn)
+- [AudioPlayerApi](https://github.com/ExMod-Team/AudioPlayerApi) (instead of the old SCPSLAudioApi)
 
 ---
 
@@ -194,70 +169,40 @@ A repaired and rewritten version of the [SCP-066 plugin by RisottoMan](https://g
 
 ### 1. Plugin
 Drop the compiled `Scp066.dll` into:
-```
-EXILED/Plugins/
-```
+
+    EXILED/Plugins/
 
 ### 2. Schematic (model)
 Place the `Scp066` schematic folder in the MapEditorReborn directory:
-```
-EXILED/Configs/MapEditorReborn/Schematics/Scp066/
-```
+
+    EXILED/Configs/ProjectMERSchematics/Scp066/
 
 ### 3. Audio
 Place audio files in:
-```
-EXILED/Configs/Plugins/scp066/Audio/
-```
+
+    EXILED/Configs/Plugins/scp066/Audio/
+
 
 Required files (`.ogg` format, **mono**, **48kHz**):
-```
-Beethoven.ogg   — main symphony attack sound
-Eric1.ogg
-Eric2.ogg
-Eric3.ogg       — Eric sounds (randomly picked)
-Notes1.ogg
-Notes2.ogg
-Notes3.ogg
-Notes4.ogg
-Notes5.ogg
-Notes6.ogg      — music notes sounds (randomly picked)
-```
 
----
-
-## Folder Structure (final result)
-```
-EXILED/
-├── Plugins/
-│   └── Scp066.dll
-├── Configs/
-│   ├── Plugins/
-│   │   └── scp066/
-│   │       └── Audio/
-│   │           ├── Beethoven.ogg
-│   │           ├── Eric1.ogg
-│   │           ├── Eric2.ogg
-│   │           ├── Eric3.ogg
-│   │           ├── Notes1.ogg
-│   │           ├── Notes2.ogg
-│   │           ├── Notes3.ogg
-│   │           ├── Notes4.ogg
-│   │           ├── Notes5.ogg
-│   │           └── Notes6.ogg
-│   └── MapEditorReborn/
-│       └── Schematics/
-│           └── Scp066/
-│               └── Scp066.json (+ assets)
-```
+    Beethoven.ogg   — main symphony attack sound
+    Eric1.ogg
+    Eric2.ogg
+    Eric3.ogg       — Eric sounds (randomly picked)
+    Notes1.ogg
+    Notes2.ogg
+    Notes3.ogg
+    Notes4.ogg
+    Notes5.ogg
+    Notes6.ogg      — music notes sounds (randomly picked)
 
 ---
 
 ## Configuration
 After the first server launch, the config will appear automatically in:
-```
-EXILED/Configs/config_gameplay.yml
-```
+
+    EXILED/Configs/config_gameplay.yml
+
 
 | Option | Default | Description |
 |---|---|---|
@@ -276,24 +221,26 @@ EXILED/Configs/config_gameplay.yml
 ---
 
 ## How it works
-- At the start of each round the plugin rolls the dice — **10% chance** that SCP-066 will appear at all
-- Picks **one random SCP** from the pool (skips SCP-079 and players who already have another CustomRole)
-- The chosen player spawns at **HCZ Armory**
-- SCP-066 has **2000 HP**, **500 HumeShield** and a reduced player scale
-- Moves slower than a normal SCP
+- At the start of each round, the plugin rolls the dice — **10% chance** that SCP-066 will appear at all.
+- Picks **one random SCP** from the pool (skips SCP-079 and players who already have another CustomRole).
+- The chosen player spawns at **HCZ Armory**.
+- SCP-066 has **2000 HP**, **500 HumeShield**, and a reduced player scale.
+- SCP-066 cannot deal damage with standard melee attacks (LMB) – the Beethoven ability is the only way to inflict damage.
 
-### Abilities (player binds)
-| Command | Alias | Description |
-|---|---|---|
-| `.scp066 eric` | `.scp066 e` | Plays a random Eric sound |
-| `.scp066 music` | `.scp066 m` | Plays a random music note |
-| `.scp066 boom` | `.scp066 b` | Activates the Beethoven attack |
+### Abilities (Native Game Menu)
+Chat commands are a thing of the past. The plugin now uses the game's built-in settings menu:
+1. Press `ESC` while in-game and navigate to **Server-specific settings**.
+2. Under the **SCP-066** section, bind any keys you want to the following actions:
+   - **Attack: Beethoven** (Activates AoE damage attack)
+   - **Sound: Eric** (Plays a random Eric sound)
+   - **Sound: Notes** (Plays a random music note)
 
 ### Beethoven Attack
-- Plays `Beethoven.ogg` audible within attack range
-- For **24 seconds** deals **5 damage/s** to all players in range
-- Hit players receive the **Concussed** effect for 2 seconds
-- Cooldown: **45 seconds**
+- Plays `Beethoven.ogg` audible within attack range.
+- For **24 seconds** deals **5 damage/s** to all players in range.
+- Hit players receive the **Concussed** effect for 2 seconds.
+- Works perfectly even if the audio folder is missing on the server!
+- Cooldown: **45 seconds**.
 
 ---
 
@@ -307,8 +254,8 @@ EXILED/Configs/config_gameplay.yml
 
 ---
 
-## Author
-**Matysiak** — version 1.0.0 Repaired
+## Authors
+**Matysiak** — version 2.0.0 (Full Rebuild & SS2 Menu Update)
 
 Based on the original **[SCP-066 by RisottoMan](https://github.com/RisottoMan/SCP-066)**
-Special thanks: **RisottoMan**, **PaRRot**
+Huge thanks to: **RisottoMan**, **PaRRot & Parrot Industry**, **TayTay**.
