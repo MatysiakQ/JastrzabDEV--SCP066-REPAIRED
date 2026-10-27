@@ -13,7 +13,9 @@ namespace Scp066
         public override uint Id { get; set; } = 660;
         public override string Name { get; set; } = "SCP-066";
         public override RoleTypeId Role { get; set; } = RoleTypeId.Scp0492;
+
         public override int MaxHealth { get; set; } = 2000;
+
         public override float SpawnChance { get; set; } = 0f;
         public override string CustomInfo { get; set; } = "SCP-066";
         public override string Description { get; set; } = "Eric's Toy";
@@ -26,11 +28,12 @@ namespace Scp066
             {
                 if (player == null || !player.IsAlive) return;
 
-                player.MaxHealth = 2000f;
-                player.Health = 2000f;
+                // Podpięte HP z pliku konfiguracyjnego
+                player.MaxHealth = Plugin.Instance.Config.MaxHealth;
+                player.Health = Plugin.Instance.Config.MaxHealth;
+
                 player.HumeShield = 500f;
                 player.MaxHumeShield = 500f;
-
 
                 player.Scale = new Vector3(0.5f, 0.5f, 0.5f);
 
