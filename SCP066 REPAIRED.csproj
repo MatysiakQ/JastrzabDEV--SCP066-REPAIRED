@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="tests/**/*.cs" />
     <Reference Include="Assembly-CSharp">
       <HintPath>REFERENCES\Assembly-CSharp.dll</HintPath>
     </Reference>

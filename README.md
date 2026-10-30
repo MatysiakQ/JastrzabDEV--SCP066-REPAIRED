@@ -1,261 +1,138 @@
-# SCP-066 Repaired
+# SCP-066 Repaired — 2.0.1
 
-> 🇵🇱 [Polski](#polski) | 🇬🇧 [English](#english)
+🇵🇱 [Polski](#polski) · 🇬🇧 [English](#english)
 
----
+## Polski
 
-# Polski
+Custom SCP dla SCP: Secret Laboratory, oparty na [SCP-066 RisottoMan](https://github.com/RisottoMan/SCP-066), z modelem ProjectMER i umiejętnościami przypisywanymi przez natywne Server-specific Settings (SS2).
 
-![Version](https://img.shields.io/badge/wersja-2.0.0-blue)
-![EXILED](https://img.shields.io/badge/EXILED-compatible-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-green)
+### Poprawki 2.0.1
 
-Całkowicie przebudowana i naprawiona wersja pluginu [SCP-066 autorstwa RisottoMan](https://github.com/RisottoMan/SCP-066), dostosowana do najnowszego silnika EXILED (9.0+) i ProjectMER.
+- Wyłączenie pluginu usuwa wyłącznie jego rolę, sesje, keybindy i dane audio.
+- Callbacki spawnu i teleportu są anulowane przy wyłączeniu i zmianie rundy; teleport sprawdza konkretne nadanie roli.
+- Brak lub usunięcie schematu pozostawia widoczny model zombie.
+- HS regeneruje się niezależnie od SCP-049, z opóźnieniem po rzeczywistym otrzymaniu obrażeń i z uwzględnieniem blokad tarczy.
+- HP jest ustawiane podczas nadania roli, bez ponownego leczenia po 0,5 s.
+- Głośność ma skalę 0–1. Stare `volume: 100` zostaje ograniczone do 1 z ostrzeżeniem w logu.
+- Każdy klip jest walidowany i ładowany osobno. Niepoprawny OGG nie blokuje pozostałego audio.
+- Audio jest ładowane raz na instancję pluginu, z prywatnymi aliasami i kontrolą własności przy usuwaniu.
+- Beethoven zapętla się do końca ataku i jest zatrzymywany przy jego zakończeniu lub przerwaniu.
+- Concussed jest nakładany wyłącznie po zaakceptowanym trafieniu, na nadal żywą ofiarę w tej samej roli.
+- Nieznana podkomenda RA jest odrzucana. Konflikt ID roli lub keybindów zatrzymuje inicjalizację z komunikatem w logu.
 
-> 💙 **Szczególne podziękowania dla:**
-> * **[RisottoMan](https://github.com/RisottoMan)** – za oryginalny plugin,
-> * **PaRRot & Parrot Industry** – za model i podstawę projektu, na której bazuje ta wersja,
+### Wymagania i zakres weryfikacji
 
----
+Wymagane: serwer x64, EXILED z włączonymi Events, CustomRoles i Permissions, [ProjectMER](https://github.com/Michal78900/MapEditorReborn) oraz [AudioPlayerApi](https://github.com/ExMod-Team/AudioPlayerApi) z jego zależnościami.
 
-## ✨ Co zostało zmienione w wersji 2.0.0 (Full Rebuild)
-- **Natywne Menu Keybindów (SS2):** Usunięto przestarzałe komendy czatowe. Umiejętności binduje się teraz bezpośrednio w menu gry (Ustawienia Serwera), co omija błędy z `ClientSettings` w EXILED.
-- **Fail-safe Audio:** Brak plików na serwerze nie blokuje już zadawania obrażeń atakiem Beethovena.
-- **Blokada zwykłego ataku:** Zablokowano możliwość zadawania obrażeń "z łapy" (LPM).
-- **Optymalizacja Hintów:** Teksty odświeżają się co 1 sekundę, eliminując obciążenie serwera.
-- Zmiana struktury projektu na `.csproj` SDK-style (kompatybilność z .NET 4.8.1).
-- Zmiana API audio na nowsze `AudioPlayerApi`.
+Projekt celuje w .NET Framework 4.8.1. Minimalna deklarowana wersja EXILED to **9.13.2**. Kompilację sprawdzono z DLL dołączonymi do repozytorium: EXILED 9.13.2 i LabApi 1.1.6. `packages.config` wskazuje AudioPlayerApi 1.1.2; AssemblyVersion dołączonej DLL wynosi 0.0.0.0, a ProjectMER 1.0.0.0 — nie identyfikują one jednoznacznie wydania produktu.
 
----
+**Kompilacja i testy poza grą nie potwierdzają zgodności z każdą nowszą wersją gry/pluginów.** Po instalacji wykonaj [testy serwerowe](docs/TESTING.md), szczególnie przy innym zestawie bibliotek. Nie zastępuj bibliotek działającego serwera plikami z REFERENCES; ten katalog służy do kompilacji.
 
-## Wymagania
-- [EXILED](https://github.com/ExMod-Team/EXILED) (najnowsza wersja 9.0+)
-- [Exiled.CustomRoles](https://github.com/ExMod-Team/EXILED) (dołączone do EXILED)
-- [ProjectMER](https://github.com/Michal78900/MapEditorReborn)
-- [AudioPlayerApi](https://github.com/ExMod-Team/AudioPlayerApi) (zamiast starego SCPSLAudioApi)
+### Instalacja i aktualizacja
 
----
+1. Wgraj skompilowany `Scp066.dll` do `EXILED/Plugins/`. Wynik kompilacji znajduje się w `bin/Release/Scp066.dll`. Usuń starszą kopię pluginu, aby uniknąć podwójnego ładowania.
+2. Dostarcz własny schemat do katalogu Schematics używanej instalacji ProjectMER. Nazwa w `schematic_name` musi odpowiadać faktycznej nazwie. Domyślnie jest to **scp066** małymi literami. Model i nagrania rozgrywki nie są dołączone do repozytorium.
+3. Umieść nagrania w `EXILED/Configs/Plugins/scp066/Audio/`:
+   - `Beethoven.ogg`
+   - `Eric1.ogg`, `Eric2.ogg`, `Eric3.ogg`
+   - `Notes1.ogg` … `Notes6.ogg`
+4. Wymagany jest OGG Vorbis, **mono, 48 kHz**, do 300 s i 32 MiB na plik. Brak audio nie blokuje obrażeń; brak modelu nie ukrywa zombie.
+5. Zrestartuj lub przeładuj plugin i sprawdź log. Ustawienia pojawiają się w konfiguracji EXILED pod prefiksem `scp066`. Dla konfiguracji indywidualnej jest to `EXILED/Configs/Plugins/scp066/<port>.yml`; przy konfiguracji zbiorczej użyj sekcji `scp066` w `EXILED/Configs/<port>-config.yml`.
 
-## Instalacja
+Zachowane ustawienia YAML mają pierwszeństwo przed nowymi domyślnymi. Nieprawidłowe wartości są korygowane podczas włączenia i raportowane w logu. Dla starego `volume: 100` warto samodzielnie zapisać `volume: 0.8` lub `1` w YAML.
 
-### 1. Plugin
-Wrzuć skompilowany plik `Scp066.dll` do folderu:
+Wyłączenie pluginu przywraca jego żywych graczy do zwykłej roli zombie z bazowymi statystykami. Inne CustomRoles nie są wyrejestrowywane.
 
-    EXILED/Plugins/
+### Konfiguracja
 
-### 2. Schematic (model)
-Wrzuć folder ze schematem `Scp066` do folderu MapEditorReborn:
+| Opcja | Domyślnie | Znaczenie / dozwolony zakres |
+|---|---:|---|
+| is_enabled | true | Włączenie pluginu |
+| debug | false | Ustawienie debug EXILED |
+| spawn_chance | 35 | 0–100%; jedno losowanie po 3 s od początku rundy |
+| max_health | 2000 | Początkowe i maksymalne HP; 1–65535 |
+| hume_shield | 500 | Początkowe i maksymalne HS; 0–65535 |
+| hume_shield_regen_rate | 10 | HS/s; 0–500, 0 wyłącza regenerację |
+| hume_shield_regen_delay | 10 | Czas bez obrażeń przed regeneracją; 0–300 s |
+| schematic_name | scp066 | Nazwa modelu ProjectMER |
+| attack_radius | 15 | Promień obrażeń i strefy pełnej głośności; 0,1–100 m |
+| damage | 7 | Bazowe obrażenia co sekundę; 0–1000 |
+| attack_duration | 22 | Liczba sekund/ticków ataku; 1–300 |
+| volume | 0.8 | Mnożnik amplitudy; 0–1 |
+| cooldown_attack | 25 | Czas od zakończenia ataku; 0–3600 s |
+| cooldown_eric | 5 | Odnowienie Erica; 0–3600 s |
+| cooldown_music | 8 | Odnowienie Notes; 0–3600 s |
+| role_id | 660 | Unikalne ID CustomRole, większe od zera |
+| beethoven_keybind_id | 6601 | Unikalne dodatnie ID SS2 |
+| eric_keybind_id | 6602 | Unikalne dodatnie ID SS2 |
+| music_keybind_id | 6603 | Unikalne dodatnie ID SS2 |
 
-    EXILED/Configs/ProjectMER/Schematics/Scp066/
+### Rozgrywka
 
-### 3. Audio
-Wrzuć pliki dźwiękowe do folderu:
+- Losowy spawn zastępuje jednego SCP; pomija SCP-079 oraz graczy z inną CustomRole. Próbuje teleportować SCP-066 do HCZ Armory; awaryjnie wybiera pokój HCZ.
+- Bazą jest zombie w skali 0,5 ze Slowness 10. **Bloodlust zombie pozostaje aktywny**; ruch nie ma jednej sztywnej prędkości.
+- LPM zombie i jedzenie ciał są blokowane. Blokada LPM nie odrzuca wszystkich innych typów obrażeń pochodzących z zewnętrznych pluginów.
+- Atak przechodzi przez ściany i zamknięte drzwi; filtr jest odległościowy w 3D.
+- Pomijane są SCP według bazowej drużyny, Tutorial, godmode, spawn protection i sam atakujący. Custom SCP oparty na ludzkiej roli wymaga osobnej polityki sojuszy.
+- Pierwszy tick obrażeń jest natychmiastowy. Domyślnie 22 × 7 = **154 bazowe obrażenia na cel**; kolejny atak może rozpocząć się około **47 s** po poprzednim.
+- Concussed trwa 2 s i jest odnawiany po kolejnych zaakceptowanych trafieniach.
+- Krótszy Beethoven jest zapętlany, dłuższy ucinany na końcu ataku. Eric i Notes są losowane wyłącznie z poprawnie załadowanych klipów; nowy dźwięk zastępuje poprzedni. Podczas ataku nie można uruchamiać Erica ani Notes.
+- Przy cooldownie kosmetycznych dźwięków równym 0 obowiązuje minimalny odstęp 0,5 s, aby ograniczyć zalewanie odtwarzacza.
+- Klawisze przypisuje się w menu **ESC → Server-specific → SCP-066**. Domyślnie nie są przypisane.
 
-    EXILED/Configs/Plugins/scp066/Audio/
+### Komendy RA
 
-Wymagane pliki (format `.ogg`, **mono**, **48kHz**):
+Wymagane uprawnienie: `scp066.admin`. Alias komendy: `066`.
 
-    Beethoven.ogg   — główny atak symfoniczny
-    Eric1.ogg
-    Eric2.ogg
-    Eric3.ogg       — dźwięki Erica (losowane)
-    Notes1.ogg
-    Notes2.ogg
-    Notes3.ogg
-    Notes4.ogg
-    Notes5.ogg
-    Notes6.ogg      — dźwięki muzyczne (losowane)
-
----
-
-## Konfiguracja
-Po pierwszym uruchomieniu serwera config pojawi się automatycznie w:
-
-    EXILED/Configs/config_gameplay.yml
-
-
-| Opcja | Domyślnie | Opis |
-|---|---|---|
-| `is_enabled` | `true` | Włącza/wyłącza plugin |
-| `debug` | `false` | Logi debugowania w konsoli |
-| `schematic_name` | `Scp066` | Nazwa schematu z MapEditorReborn |
-| `spawn_chance` | `10` | Szansa spawnu w % (10 = 10%) |
-| `volume` | `0.8` | Głośność dźwięków (0.0 - 1.0) |
-| `attack_duration` | `24` | Czas trwania ataku Beethovena (sekundy) |
-| `damage` | `5` | Obrażenia na sekundę podczas ataku |
-| `attack_radius` | `8` | Zasięg ataku i słyszalności dźwięku |
-| `cooldown_eric` | `10` | Cooldown dźwięku Eric (sekundy) |
-| `cooldown_music` | `15` | Cooldown dźwięków Notes (sekundy) |
-| `cooldown_attack` | `45` | Cooldown ataku Beethovena (sekundy) |
-
----
-
-## Jak działa
-- Na starcie każdej rundy plugin rzuca kością — **10% szansy**, że SCP-066 w ogóle się pojawi.
-- Wybiera **losowego SCPa** z puli (pomija SCP-079 i graczy, którzy już mają inną CustomRole).
-- Wybrany gracz spawnuje się w **HCZ Armory**.
-- SCP-066 ma **2000 HP**, **500 HumeShield** i zmniejszoną skalę postaci.
-- SCP-066 nie zadaje obrażeń zwykłym atakiem (LPM) – używa do tego wyłącznie Beethovena.
-
-### Umiejętności (Natywne menu w grze)
-Zrezygnowano z wpisywania komend na czacie. Plugin używa teraz menu ustawień gry:
-1. Podczas gry wciśnij klawisz `ESC` i wybierz **Ustawienia specyficzne dla serwera (Server-specific)**.
-2. W sekcji **SCP-066** przypisz dowolne klawisze do poniższych akcji:
-   - **Atak: Beethoven** (Aktywuje atak obszarowy)
-   - **Dźwięk: Eric** (Odtwarza losowy dźwięk Erica)
-   - **Dźwięk: Notes** (Odtwarza losową melodię)
-
-### Atak Beethovena
-- Odtwarza `Beethoven.ogg` słyszalny w zasięgu ataku.
-- Przez **24 sekundy** zadaje **5 obrażeń/s** wszystkim graczom w zasięgu.
-- Trafieni gracze dostają efekt **Concussed** na 2 sekundy.
-- Działa prawidłowo nawet w przypadku braku plików audio na serwerze!
-- Cooldown: **45 sekund**.
-
----
-
-## Komendy (Remote Admin)
-| Komenda | Opis |
+| Komenda | Działanie |
 |---|---|
-| `scp066 give <nick/id>` | Nadaje rolę SCP-066 graczowi |
-| `scp066 remove <nick/id>` | Odbiera rolę SCP-066 graczowi |
+| scp066 give <nick/id> | Nadaje rolę; odrzuca gracza mającego już dowolną CustomRole |
+| scp066 remove <nick/id> | Odbiera SCP-066 i **przenosi gracza do obserwatorów** |
 
-> Wymagane uprawnienie: `scp066.admin`
+### Budowanie i testy
 
----
+Z katalogu repozytorium, z .NET SDK 8:
 
-## Twórcy
-**Matysiak** — wersja 2.0.0 (Full Rebuild & SS2 Menu Update)
+```bash
+dotnet build "SCP066 REPAIRED.csproj" -c Release
+dotnet run --project tests/RegressionTests.csproj -c Release
+```
 
-Oparty na oryginalnym pluginie **[SCP-066 by RisottoMan](https://github.com/RisottoMan/SCP-066)**
-Ogromne podziękowania dla: **RisottoMan**, **PaRRot & Parrot Industry**, **TayTay**.
+Testy uruchamiają produkcyjny kod konfiguracji i katalogu audio z rzeczywistymi bibliotekami AudioPlayerApi i NVorbis. Sprawdzają m.in. uszkodzone/niewłaściwe OGG, izolację właścicieli klipów, sprzątanie i bezpieczną migrację głośności. Krótkie sinusoidy w tests/Fixtures są wyłącznie danymi testowymi.
 
----
----
+Pełna lista testów wymagających gry: [docs/TESTING.md](docs/TESTING.md).
 
-# English
+## English
 
-![Version](https://img.shields.io/badge/version-2.0.0-blue)
-![EXILED](https://img.shields.io/badge/EXILED-compatible-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-green)
+SCP-066 custom role for SCP: Secret Laboratory, based on [RisottoMan's SCP-066](https://github.com/RisottoMan/SCP-066), with ProjectMER visuals and native SS2 keybinds.
 
-A completely rebuilt and repaired version of the [SCP-066 plugin by RisottoMan](https://github.com/RisottoMan/SCP-066), updated for the latest EXILED (9.0+) and ProjectMER engine.
+### Version 2.0.1
 
-> 💙 **Special thanks to:**
-> * **[RisottoMan](https://github.com/RisottoMan)** – for the original plugin,
-> * **PaRRot & Parrot Industry** – for the model and the project foundation this version is based on,
+Cleanup is scoped to this plugin's roles, settings, timers and audio. Delayed work checks the current round and role session. Missing models retain the visible zombie. HS regenerates independently of SCP-049. HP is assigned on spawn without a delayed refill. Volume uses a 0–1 amplitude multiplier; legacy 100 is clamped to 1 with a warning. Clips are validated individually, loaded once per plugin instance, and stored under private aliases. Beethoven loops until the attack ends and is stopped on cancellation. Concussed requires an accepted hit against a living target in the same native role. Invalid RA subcommands and conflicting IDs are rejected.
 
----
+### Requirements and installation
 
-## ✨ What changed in version 2.0.0 (Full Rebuild)
-- **Native Keybind Menu (SS2):** Removed obsolete chat commands. Abilities are now bound directly in the game's Server-Specific Settings menu, completely bypassing EXILED's faulty `ClientSettings`.
-- **Audio Fail-safe:** Missing audio files on the server no longer prevent the Beethoven attack from dealing damage.
-- **Basic Attack Blocked:** Prevented the ability to deal standard melee damage (LMB).
-- **Hint Optimization:** Hints now refresh exactly once per second, eliminating server strain.
-- Project structure rebuilt to SDK-style `.csproj` (maintaining `.NET 4.8.1` compatibility).
-- Audio API switched to the newer `AudioPlayerApi`.
+Requires x64 server, EXILED Events/CustomRoles/Permissions, ProjectMER and AudioPlayerApi with their dependencies. Target: .NET Framework 4.8.1; declared minimum EXILED 9.13.2. Compilation was checked against the included EXILED 9.13.2 and LabApi 1.1.6 references. Do not replace live server libraries with REFERENCES files. Other game/dependency versions require server testing.
 
----
+1. Install the compiled `bin/Release/Scp066.dll` into `EXILED/Plugins/` and remove older copies.
+2. Supply the model in your ProjectMER installation's Schematics directory. Match `schematic_name` exactly; the default is lowercase **scp066**.
+3. Put `Beethoven.ogg`, `Eric1.ogg`–`Eric3.ogg` and `Notes1.ogg`–`Notes6.ogg` in `EXILED/Configs/Plugins/scp066/Audio/`. Required: Vorbis, mono, 48 kHz, positive duration up to 300 s, up to 32 MiB each. Gameplay model/audio assets are not included.
+4. Restart/reload and inspect logs. Individual EXILED config: `EXILED/Configs/Plugins/scp066/<port>.yml`; combined config: section `scp066` in `EXILED/Configs/<port>-config.yml`.
 
-## Requirements
-- [EXILED](https://github.com/ExMod-Team/EXILED) (latest version 9.0+)
-- [Exiled.CustomRoles](https://github.com/ExMod-Team/EXILED) (included with EXILED)
-- [ProjectMER](https://github.com/Michal78900/MapEditorReborn)
-- [AudioPlayerApi](https://github.com/ExMod-Team/AudioPlayerApi) (instead of the old SCPSLAudioApi)
+Existing YAML overrides defaults. Invalid values are repaired at enable time and logged. Set legacy `volume: 100` to `0.8` or `1` in your YAML. Unloading restores this plugin's living players to ordinary zombies with native stats; other CustomRoles are left registered.
 
----
+### Default configuration and behavior
 
-## Installation
+Default values: 35% spawn chance; 2000 HP; 500 HS; HS regeneration 10/s after 10 s without accepted damage; 15 m radius; 7 damage per tick; 22 ticks; volume 0.8; attack cooldown 25 s after completion; Eric cooldown 5 s; Notes cooldown 8 s. ID defaults: role 660, Beethoven 6601, Eric 6602, Notes 6603. The configuration table above lists all keys and validated ranges.
 
-### 1. Plugin
-Drop the compiled `Scp066.dll` into:
+The first tick is immediate. A full attack deals **154 base damage per target**, with about **47 s between activations**. Walls/doors do not block the distance-based attack. SCP team members, Tutorial, godmode, spawn protection and the attacker are excluded. Custom SCPs on human base roles need a separate alliance policy.
 
-    EXILED/Plugins/
+The role retains zombie Bloodlust and Slowness 10 at scale 0.5. Base melee and corpse consumption are blocked. Beethoven loops if short and is cut off at attack end. Cosmetic sounds choose only loaded clips and replace the previous sound; they are blocked during the attack. Zero cosmetic cooldown still has a 0.5 s anti-flood interval. Bind abilities in ESC → Server-specific → SCP-066.
 
-### 2. Schematic (model)
-Place the `Scp066` schematic folder in the MapEditorReborn directory:
+RA permission: `scp066.admin`. `scp066 give <nickname/id>` rejects players with an existing custom role. `scp066 remove <nickname/id>` removes SCP-066 and **moves the player to Spectator**. Unknown subcommands do nothing.
 
-    EXILED/Configs/ProjectMERSchematics/Scp066/
+Build and run the regression commands above using .NET SDK 8. Tests cover production config/audio loading against real dependencies, not a running game. Complete [the server checklist](docs/TESTING.md) before live use.
 
-### 3. Audio
-Place audio files in:
+## Credits
 
-    EXILED/Configs/Plugins/scp066/Audio/
-
-
-Required files (`.ogg` format, **mono**, **48kHz**):
-
-    Beethoven.ogg   — main symphony attack sound
-    Eric1.ogg
-    Eric2.ogg
-    Eric3.ogg       — Eric sounds (randomly picked)
-    Notes1.ogg
-    Notes2.ogg
-    Notes3.ogg
-    Notes4.ogg
-    Notes5.ogg
-    Notes6.ogg      — music notes sounds (randomly picked)
-
----
-
-## Configuration
-After the first server launch, the config will appear automatically in:
-
-    EXILED/Configs/config_gameplay.yml
-
-
-| Option | Default | Description |
-|---|---|---|
-| `is_enabled` | `true` | Enables/disables the plugin |
-| `debug` | `false` | Debug logs in console |
-| `schematic_name` | `Scp066` | Schematic name from MapEditorReborn |
-| `spawn_chance` | `10` | Spawn chance in % (10 = 10%) |
-| `volume` | `0.8` | Sound volume (0.0 - 1.0) |
-| `attack_duration` | `24` | Duration of Beethoven attack (seconds) |
-| `damage` | `5` | Damage per second during attack |
-| `attack_radius` | `8` | Attack and audio range |
-| `cooldown_eric` | `10` | Eric sound cooldown (seconds) |
-| `cooldown_music` | `15` | Notes sound cooldown (seconds) |
-| `cooldown_attack` | `45` | Beethoven attack cooldown (seconds) |
-
----
-
-## How it works
-- At the start of each round, the plugin rolls the dice — **10% chance** that SCP-066 will appear at all.
-- Picks **one random SCP** from the pool (skips SCP-079 and players who already have another CustomRole).
-- The chosen player spawns at **HCZ Armory**.
-- SCP-066 has **2000 HP**, **500 HumeShield**, and a reduced player scale.
-- SCP-066 cannot deal damage with standard melee attacks (LMB) – the Beethoven ability is the only way to inflict damage.
-
-### Abilities (Native Game Menu)
-Chat commands are a thing of the past. The plugin now uses the game's built-in settings menu:
-1. Press `ESC` while in-game and navigate to **Server-specific settings**.
-2. Under the **SCP-066** section, bind any keys you want to the following actions:
-   - **Attack: Beethoven** (Activates AoE damage attack)
-   - **Sound: Eric** (Plays a random Eric sound)
-   - **Sound: Notes** (Plays a random music note)
-
-### Beethoven Attack
-- Plays `Beethoven.ogg` audible within attack range.
-- For **24 seconds** deals **5 damage/s** to all players in range.
-- Hit players receive the **Concussed** effect for 2 seconds.
-- Works perfectly even if the audio folder is missing on the server!
-- Cooldown: **45 seconds**.
-
----
-
-## Commands (Remote Admin)
-| Command | Description |
-|---|---|
-| `scp066 give <nick/id>` | Grants the SCP-066 role to a player |
-| `scp066 remove <nick/id>` | Removes the SCP-066 role from a player |
-
-> Required permission: `scp066.admin`
-
----
-
-## Authors
-**Matysiak** — version 2.0.0 (Full Rebuild & SS2 Menu Update)
-
-Based on the original **[SCP-066 by RisottoMan](https://github.com/RisottoMan/SCP-066)**
-Huge thanks to: **RisottoMan**, **PaRRot & Parrot Industry**, **TayTay**.
+Matysiak / JastrząbDEV — repaired implementation. Original plugin: **RisottoMan**. Model and project foundation: **PaRRot & Parrot Industry**. Additional thanks: **TayTay**. MIT license: [LICENSE.txt](LICENSE.txt).
