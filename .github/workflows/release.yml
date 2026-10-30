@@ -1,0 +1,59 @@
+name: Publish SCP-066 release
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - '.github/workflows/release.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: scp066-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the exact source commit
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Set up .NET 8
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9
+        with:
+          dotnet-version: '8.0.x'
+      - name: Build the plugin
+        run: dotnet build "SCP066 REPAIRED.csproj" -c Release --nologo
+      - name: Run regression checks
+        run: dotnet run --project tests/RegressionTests.csproj -c Release
+      - name: Prepare release files
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p release
+          cp bin/Release/Scp066.dll release/Scp066.dll
+          (cd release && sha256sum Scp066.dll > Scp066.dll.sha256)
+      - name: Publish release and tag
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          version=$(sed -n 's/.*AssemblyVersion("\([0-9]*\.[0-9]*\.[0-9]*\)\.0").*/\1/p' Properties/AssemblyInfo.cs)
+          test -n "$version"
+          tag="v$version"
+          notes="docs/releases/$tag.md"
+          test -f "$notes"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag already exists; leaving it unchanged."
+            exit 0
+          fi
+          gh release create "$tag" release/Scp066.dll release/Scp066.dll.sha256 \
+            --target "$RELEASE_COMMIT" \
+            --title "SCP-066 Repaired $tag" \
+            --notes-file "$notes"
