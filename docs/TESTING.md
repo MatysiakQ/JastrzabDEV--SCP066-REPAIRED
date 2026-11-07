@@ -1,4 +1,4 @@
-# SCP-066 2.0.2 — testy serwerowe / server checklist
+# SCP-066 2.0.3 — testy serwerowe / server checklist
 
 Nie wykonano ich w kontenerze. Wymagają działającego serwera SCP:SL, właściwych zasobów oraz co najmniej dwóch klientów. Testy w tests/ dotyczą konfiguracji i audio, nie symulują pełnej gry.
 

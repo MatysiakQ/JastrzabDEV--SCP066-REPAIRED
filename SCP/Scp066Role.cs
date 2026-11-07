@@ -20,7 +20,7 @@ namespace Scp066
         public override float SpawnChance { get; set; } = 0f;
         public override string CustomInfo { get; set; } = "SCP-066";
         public override string Description { get; set; } = "Eric's Toy";
-        public override Vector3 Scale { get; set; } = new Vector3(0.5f, 0.5f, 0.5f);
+        public override Vector3 Scale { get; set; } = new Vector3(0.7f, 0.7f, 0.7f);
         // The game may already be changing the role. Only an explicit RA remove
         // should force Spectator, not an internal CustomRoles cleanup callback.
         public override bool RemovalKillsPlayer { get; set; } = false;
