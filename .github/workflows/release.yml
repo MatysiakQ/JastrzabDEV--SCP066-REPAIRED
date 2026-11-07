@@ -5,6 +5,12 @@ on:
     branches: [master]
     paths:
       - '.github/workflows/release.yml'
+      - 'Plugin.cs'
+      - 'Config.cs'
+      - 'SCP/**'
+      - 'Properties/AssemblyInfo.cs'
+      - 'REFERENCES/Exiled.*.dll'
+      - 'docs/releases/**'
   workflow_dispatch:
 
 permissions:

@@ -17,8 +17,8 @@ namespace Scp066
         public static Plugin Instance { get; private set; }
         public override string Name => "Scp066";
         public override string Prefix => "scp066";
-        public override Version Version => new Version(2, 0, 1);
-        public override Version RequiredExiledVersion => new Version(9, 13, 2);
+        public override Version Version => new Version(2, 0, 2);
+        public override Version RequiredExiledVersion => new Version(9, 15, 3);
 
         internal Scp066Role Role { get; private set; }
         internal AudioCatalog Audio { get; private set; }

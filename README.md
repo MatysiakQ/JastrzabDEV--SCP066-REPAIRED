@@ -1,4 +1,4 @@
-# SCP-066 Repaired — 2.0.1
+# SCP-066 Repaired — 2.0.2
 
 🇵🇱 [Polski](#polski) · 🇬🇧 [English](#english)
 
@@ -24,7 +24,7 @@ Custom SCP dla SCP: Secret Laboratory, oparty na [SCP-066 RisottoMan](https://gi
 
 Wymagane: serwer x64, EXILED z włączonymi Events, CustomRoles i Permissions, [ProjectMER](https://github.com/Michal78900/MapEditorReborn) oraz [AudioPlayerApi](https://github.com/ExMod-Team/AudioPlayerApi) z jego zależnościami.
 
-Projekt celuje w .NET Framework 4.8.1. Minimalna deklarowana wersja EXILED to **9.13.2**. Kompilację sprawdzono z DLL dołączonymi do repozytorium: EXILED 9.13.2 i LabApi 1.1.6. `packages.config` wskazuje AudioPlayerApi 1.1.2; AssemblyVersion dołączonej DLL wynosi 0.0.0.0, a ProjectMER 1.0.0.0 — nie identyfikują one jednoznacznie wydania produktu.
+Projekt celuje w .NET Framework 4.8.1. Minimalna deklarowana wersja EXILED to **9.15.3**. Kompilację sprawdzono z DLL dołączonymi do repozytorium: EXILED 9.15.3 i LabApi 1.1.6. `packages.config` wskazuje AudioPlayerApi 1.1.2; AssemblyVersion dołączonej DLL wynosi 0.0.0.0, a ProjectMER 1.0.0.0 — nie identyfikują one jednoznacznie wydania produktu.
 
 **Kompilacja i testy poza grą nie potwierdzają zgodności z każdą nowszą wersją gry/pluginów.** Po instalacji wykonaj [testy serwerowe](docs/TESTING.md), szczególnie przy innym zestawie bibliotek. Nie zastępuj bibliotek działającego serwera plikami z REFERENCES; ten katalog służy do kompilacji.
 
@@ -112,7 +112,7 @@ Cleanup is scoped to this plugin's roles, settings, timers and audio. Delayed wo
 
 ### Requirements and installation
 
-Requires x64 server, EXILED Events/CustomRoles/Permissions, ProjectMER and AudioPlayerApi with their dependencies. Target: .NET Framework 4.8.1; declared minimum EXILED 9.13.2. Compilation was checked against the included EXILED 9.13.2 and LabApi 1.1.6 references. Do not replace live server libraries with REFERENCES files. Other game/dependency versions require server testing.
+Requires x64 server, EXILED Events/CustomRoles/Permissions, ProjectMER and AudioPlayerApi with their dependencies. Target: .NET Framework 4.8.1; declared minimum EXILED 9.15.3. Compilation was checked against the included EXILED 9.15.3 and LabApi 1.1.6 references. Do not replace live server libraries with REFERENCES files. Other game/dependency versions require server testing.
 
 1. Install the compiled `bin/Release/Scp066.dll` into `EXILED/Plugins/` and remove older copies.
 2. Supply the model in your ProjectMER installation's Schematics directory. Match `schematic_name` exactly; the default is lowercase **scp066**.
